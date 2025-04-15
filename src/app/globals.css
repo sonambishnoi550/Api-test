@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import "tailwindcss";
+
+body {
+    font-family: "Inter", sans-serif;
+}
+
+.button-gradient-bg {
+    background: linear-gradient(299.31deg, #EB088D 9.21%, #A911C6 34.26%, #7717F3 66.93%, #640DF9 110.07%);
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
