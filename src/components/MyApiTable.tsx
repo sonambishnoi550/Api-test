@@ -5,10 +5,10 @@ import { DROPDOWN_OPTIONS, USER_DATA } from '@/utils/helper';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 interface DashboardProps {
-    universities: any; 
+    universities: any;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
+const MyApiTable: React.FC<DashboardProps> = ({ universities }) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const initialPage = parseInt(searchParams.get('page') || '1', 10);
@@ -20,6 +20,7 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
     const [activeRowId, setActiveRowId] = useState<number | null>(null);
     const [currentPage, setCurrentPage] = useState(initialPage);
     const [data, setData] = useState<any[]>([]);
+    const [deletedRows, setDeletedRows] = useState<number[]>([]);
     const [loading, setLoading] = useState(true);
 
     const handlePageChange = (newPage: number) => {
@@ -36,28 +37,17 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
         router.push(`?${queryParams.toString()}`);
     };
 
-    // Fetch data from the API
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const response = await fetch('http://universities.hipolabs.com/search?name=middle');
-                const result = await response.json();
-                const storedData = localStorage.getItem('deletedRows');
-                const deletedRows = storedData ? JSON.parse(storedData) : [];
-
-                const updatedData = result.map((item: any, index: number) => ({
-                    id: index + 1,
-                    name: item.name,
-                    country: item.country,
-                    web_pages: item.web_pages,
-                })).filter((item: any) => !deletedRows.includes(item.id)); // Filter out deleted rows
-
-                setData(updatedData);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setLoading(false);
-            }
+            const response = await fetch('/api/universities');
+            const result = await response.json();
+            setData(result.map((item: any, index: number) => ({
+                id: index + 1,
+                name: item.name,
+                country: item.country,
+                web_pages: item.web_pages,
+            })));
+            setLoading(false);
         };
 
         fetchData();
@@ -79,23 +69,33 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
         localStorage.setItem('tableData', JSON.stringify(data));
     }, [data]);
 
-    const filtered = data.filter((item) =>
+    useEffect(() => {
+        const storedDeletedRows = JSON.parse(localStorage.getItem('deletedRows') || '[]');
+        setDeletedRows(storedDeletedRows);
+    }, []);
+
+    useEffect(() => {
+        if (deletedRows.length > 0) {
+            localStorage.setItem('deletedRows', JSON.stringify(deletedRows));
+        }
+    }, [deletedRows]);
+
+    const handleDeleteRow = (id: number) => {
+        setDeletedRows((prev) => {
+            const newDeletedRows = [...prev, id];
+            localStorage.setItem('deletedRows', JSON.stringify(newDeletedRows));
+            return newDeletedRows;
+        });
+    };
+
+    const filteredData = data.filter((item) => !deletedRows.includes(item.id));
+
+    const filtered = filteredData.filter((item) =>
         item.country.toLowerCase().includes(search.trim().toLowerCase())
     );
 
     const totalPages = Math.ceil(filtered.length / entries);
     const paginatedData = filtered.slice((currentPage - 1) * entries, currentPage * entries);
-
-    const handleDeleteRow = (rowId: number) => {
-        const updated = data.filter((item) => item.id !== rowId);
-        setData(updated);
-        setActiveRowId(null);
-
-        // Save deleted row ID to localStorage
-        const deletedRows = JSON.parse(localStorage.getItem('deletedRows') || '[]');
-        deletedRows.push(rowId);
-        localStorage.setItem('deletedRows', JSON.stringify(deletedRows));
-    };
 
     return (
         <div className="min-h-screen bg-[#F5F6FA] flex justify-center items-center py-14">
@@ -171,7 +171,7 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
                                             value={entries}
                                             onChange={(e) => {
                                                 setEntries(+e.target.value);
-                                                setCurrentPage(1); // Reset to page 1
+                                                setCurrentPage(1);
                                             }}
                                             className="border text-white font-medium text-base w-[59px] gap-1 rounded px-2 py-1 outline-none bg-[#CD0CA7]"
                                         >
@@ -190,7 +190,7 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
                                         value={search}
                                         onChange={(e) => {
                                             setSearch(e.target.value);
-                                            setCurrentPage(1); // Reset to page 1
+                                            setCurrentPage(1);
                                         }}
                                         className="ml-auto border px-3 py-1 rounded-full placeholder:text-black text-black border-black/20 outline-none mr-4"
                                     />
@@ -212,7 +212,7 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
                                                 <tr>
                                                     <td colSpan={5} className="text-center py-6">Loading...</td>
                                                 </tr>
-                                            ) : paginatedData.length === 0 ? (
+                                            ) : filteredData.length === 0 ? (
                                                 <tr>
                                                     <td colSpan={5} className="text-center py-6">No results found.</td>
                                                 </tr>
@@ -253,7 +253,6 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
                                 </div>
                             </main>
 
-                            {/* Pagination */}
                             <div className="flex justify-end items-center mt-4 gap-2 text-sm">
                                 <button
                                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
@@ -263,7 +262,6 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
                                     Prev
                                 </button>
 
-                                {/* Page Numbers */}
                                 {Array.from({ length: totalPages }).map((_, i) => {
                                     const page = i + 1;
 
@@ -287,19 +285,9 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
                                         );
                                     }
 
-                                    // Add ellipsis (...) only once where needed
-                                    if (
-                                        (page === 4 && currentPage > 5) ||
-                                        (page === totalPages - 1 && currentPage < totalPages - 3)
-                                    ) {
-                                        return (
-                                            <span key={`ellipsis-${page}`} className="px-2">
-                                                ...
-                                            </span>
-                                        );
-                                    }
-
-                                    return null;
+                                    return (
+                                        <span key={page} className="px-3 py-1">...</span>
+                                    );
                                 })}
 
                                 <button
@@ -318,4 +306,4 @@ const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
     );
 };
 
-export default Dashboard;
+export default MyApiTable;
