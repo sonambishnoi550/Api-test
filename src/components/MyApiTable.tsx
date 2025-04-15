@@ -162,7 +162,7 @@ const MyDashboard = () => {
                                         value={search}
                                         onChange={(e) => {
                                             setSearch(e.target.value);
-                                            setCurrentPage(1); // Reset to page 1
+                                            setCurrentPage(1);
                                         }}
                                         className="ml-auto border px-3 py-1 rounded-full placeholder:text-black text-black border-black/20 outline-none mr-4"
                                     />
