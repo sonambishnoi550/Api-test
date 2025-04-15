@@ -5,7 +5,7 @@ import Programs from '@/components/Programs'
 const page = () => {
   return (
     <div>
-      <MyApiTable />
+      <MyApiTable universities={[]} />
       <Programs />
     </div>
   )

@@ -1,10 +1,14 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { DROPDOWN_OPTIONS, TABLE_DATA, USER_DATA } from '@/utils/helper';
+import { DROPDOWN_OPTIONS, USER_DATA } from '@/utils/helper';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-const MyDashboard = () => {
+interface DashboardProps {
+    universities: any; 
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ universities }) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const initialPage = parseInt(searchParams.get('page') || '1', 10);
@@ -13,16 +17,15 @@ const MyDashboard = () => {
 
     const [search, setSearch] = useState(initialSearch);
     const [entries, setEntries] = useState(initialLimit);
-
     const [activeRowId, setActiveRowId] = useState<number | null>(null);
     const [currentPage, setCurrentPage] = useState(initialPage);
-    const [data, setData] = useState(TABLE_DATA);
+    const [data, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage);
         updateUrl(newPage, entries, search);
     };
-
 
     const updateUrl = (page: number, limit: number, search: string) => {
         const queryParams = new URLSearchParams();
@@ -33,16 +36,31 @@ const MyDashboard = () => {
         router.push(`?${queryParams.toString()}`);
     };
 
+    // Fetch data from the API
     useEffect(() => {
-        const storedPage = localStorage.getItem('currentPage');
-        if (storedPage) {
-            setCurrentPage(parseInt(storedPage, 10));
-        }
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://universities.hipolabs.com/search?name=middle');
+                const result = await response.json();
+                const storedData = localStorage.getItem('deletedRows');
+                const deletedRows = storedData ? JSON.parse(storedData) : [];
 
-        const storedData = localStorage.getItem('tableData');
-        if (storedData) {
-            setData(JSON.parse(storedData));
-        }
+                const updatedData = result.map((item: any, index: number) => ({
+                    id: index + 1,
+                    name: item.name,
+                    country: item.country,
+                    web_pages: item.web_pages,
+                })).filter((item: any) => !deletedRows.includes(item.id)); // Filter out deleted rows
+
+                setData(updatedData);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, []);
 
     useEffect(() => {
@@ -65,9 +83,19 @@ const MyDashboard = () => {
         item.country.toLowerCase().includes(search.trim().toLowerCase())
     );
 
-
     const totalPages = Math.ceil(filtered.length / entries);
     const paginatedData = filtered.slice((currentPage - 1) * entries, currentPage * entries);
+
+    const handleDeleteRow = (rowId: number) => {
+        const updated = data.filter((item) => item.id !== rowId);
+        setData(updated);
+        setActiveRowId(null);
+
+        // Save deleted row ID to localStorage
+        const deletedRows = JSON.parse(localStorage.getItem('deletedRows') || '[]');
+        deletedRows.push(rowId);
+        localStorage.setItem('deletedRows', JSON.stringify(deletedRows));
+    };
 
     return (
         <div className="min-h-screen bg-[#F5F6FA] flex justify-center items-center py-14">
@@ -109,7 +137,7 @@ const MyDashboard = () => {
                                         >
                                             <span className="text-sm py-2 pl-3 flex gap-2">
                                                 <Image
-                                                    src={`/assets/images/svg/${text === 'FAQs' ? 'faq' : 'contact'}.svg`}
+                                                    src="/assets/images/svg/faq.svg"
                                                     alt="icon"
                                                     height={16}
                                                     width={16}
@@ -162,7 +190,7 @@ const MyDashboard = () => {
                                         value={search}
                                         onChange={(e) => {
                                             setSearch(e.target.value);
-                                            setCurrentPage(1);
+                                            setCurrentPage(1); // Reset to page 1
                                         }}
                                         className="ml-auto border px-3 py-1 rounded-full placeholder:text-black text-black border-black/20 outline-none mr-4"
                                     />
@@ -174,57 +202,58 @@ const MyDashboard = () => {
                                             <tr>
                                                 <th className="px-4 py-2 text-left">ID</th>
                                                 <th className="px-4 py-2 text-left">Country</th>
-                                                <th className="px-4 py-2 text-left">Offer</th>
-                                                <th className="px-4 py-2 text-left">Team</th>
-                                                <th className="px-4 py-2 text-left">APP ID</th>
-                                                <th className="px-4 py-2 text-left">Action</th>
-                                                <th className="px-4 py-2 text-center">
-                                                    <Image src="/assets/images/svg/dropdown.svg" alt="dropdown" width={20} height={20} />
-                                                </th>
+                                                <th className="px-4 py-2 text-left">University Name</th>
+                                                <th className="px-4 py-2 text-left">Web Pages</th>
+                                                <th className="px-4 py-2 text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {paginatedData.map((row) => (
-                                                <tr
-                                                    key={row.id}
-                                                    onClick={() => setActiveRowId(row.id)}
-                                                    className={`transition duration-300 ease-in-out cursor-pointer ${row.id === activeRowId ? 'bg-[#CD0CA7]/20' : 'bg-[#CD0CA714]/10'
-                                                        } hover:bg-[#CD0CA7]/10 active:bg-[#CD0CA7]/20 `}
-                                                >
-                                                    <td className="px-4 py-3">{row.id}</td>
-                                                    <td className="px-4 py-3">{row.country}</td>
-                                                    <td className="px-4 py-3">
-                                                        <span
-                                                            className={`text-xs px-2 py-1 rounded font-medium text-white ${row.offer === 'CD' ? 'bg-red-600' : 'bg-green-600'
-                                                                }`}
-                                                        >
-                                                            {row.offer}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-4 py-3">{row.team}</td>
-                                                    <td className="px-4 py-3">{row.appId}</td>
-                                                    <td className="px-4 py-3 text-black hover:underline cursor-pointer flex gap-1">
-                                                        Manage <Image src="/assets/images/svg/manage-arrow.svg" alt="arrow" width={16} height={16} />
-                                                    </td>
-                                                    <td className="px-4 py-3">
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                const updated = data.filter((item) => item.id !== row.id);
-                                                                setData(updated);
-                                                                setActiveRowId(null);
-                                                            }}
-                                                        >
-                                                            <Image src="/assets/images/svg/delete.svg" alt="delete" width={20} height={20} className='cursor-pointer' />
-                                                        </button>
-                                                    </td>
+                                            {loading ? (
+                                                <tr>
+                                                    <td colSpan={5} className="text-center py-6">Loading...</td>
                                                 </tr>
-                                            ))}
+                                            ) : paginatedData.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan={5} className="text-center py-6">No results found.</td>
+                                                </tr>
+                                            ) : (
+                                                paginatedData.map((row) => (
+                                                    <tr
+                                                        key={row.id}
+                                                        onClick={() => setActiveRowId(row.id)}
+                                                        className={`transition duration-300 ease-in-out cursor-pointer ${row.id === activeRowId ? 'bg-[#CD0CA7]/20' : 'bg-[#CD0CA714]/10'} hover:bg-[#CD0CA7]/10 active:bg-[#CD0CA7]/20`}
+                                                    >
+                                                        <td className="px-4 py-3">{row.id}</td>
+                                                        <td className="px-4 py-3">{row.country}</td>
+                                                        <td className="px-4 py-3">{row.name}</td>
+                                                        <td className="px-4 py-3">
+                                                            {row.web_pages.length > 0 ? (
+                                                                <a href={row.web_pages[0]} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                                                    Visit Website
+                                                                </a>
+                                                            ) : (
+                                                                'N/A'
+                                                            )}
+                                                        </td>
+                                                        <td className="px-4 py-3">
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleDeleteRow(row.id);
+                                                                }}
+                                                            >
+                                                                <Image src="/assets/images/svg/delete.svg" alt="delete" width={20} height={20} className="cursor-pointer" />
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
-
                             </main>
+
+                            {/* Pagination */}
                             <div className="flex justify-end items-center mt-4 gap-2 text-sm">
                                 <button
                                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
@@ -281,10 +310,7 @@ const MyDashboard = () => {
                                     Next
                                 </button>
                             </div>
-
-
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -292,4 +318,4 @@ const MyDashboard = () => {
     );
 };
 
-export default MyDashboard;
+export default Dashboard;
