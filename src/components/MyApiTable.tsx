@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { TABLE_DATA, USER_DATA } from '@/utils/helper';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-const MyDashboard = ({ universities }: { universities: any[] }) => {
+    const MyApiTable = ({ universities }: { universities: any[] }) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const initialPage = parseInt(searchParams.get('page') || '1', 10);
@@ -69,7 +69,6 @@ const MyDashboard = ({ universities }: { universities: any[] }) => {
                         </button>
                     </div>
                 </div>
-
                 <div className="max-xl:overflow-auto">
                     <div className="flex w-full">
                         <aside className="sm:p-6 space-y-8 shadow-sm">
@@ -80,8 +79,7 @@ const MyDashboard = ({ universities }: { universities: any[] }) => {
                                     > <span className="text-sm py-2 pl-3 flex gap-2">
                                             <Image src="/assets/images/svg/saved.svg" alt="saved" height={16} width={16} />
                                             {item} </span>
-                                    </div>
-                                ))}
+                                    </div> ))}
                             </div>
                             <div>
                                 <h2 className="font-medium text-xl mb-3">Contact and Support</h2>
@@ -90,13 +88,8 @@ const MyDashboard = ({ universities }: { universities: any[] }) => {
                                         <div key={i} className="py-1 mb-3 w-[251px] cursor-pointer bg-gradient-to-r from-[#CD0CA7]/10 to-[#CD0CA7]/0 border-l-2 border-[#CD0CA7]"
                                         >
                                             <span className="text-sm py-2 pl-3 flex gap-2">
-                                                <Image
-                                                    src={`/assets/images/svg/${text === 'FAQs' ? 'faq' : 'contact'}.svg`}
-                                                    alt="icon"
-                                                    height={16}
-                                                    width={16}
-                                                />
-                                                {text}
+                                                <Image src={`/assets/images/svg/${text === 'FAQs' ? 'faq' : 'contact'}.svg`} alt="icon"
+                                                    height={16} width={16} /> {text}
                                             </span>
                                         </div>
                                     ))}
@@ -138,21 +131,11 @@ const MyDashboard = ({ universities }: { universities: any[] }) => {
 
                                         Enter per page
                                     </label>
-                                    <input
-                                        type="text"
-                                        placeholder="Find"
-                                        value={search}
-                                        onChange={(e) => {
-                                            const val = e.target.value;
-                                            setSearch(val);
-                                            router.push(`?page=1${val ? `&search=${val}` : ''}${activeRowId ? `&row=${activeRowId}` : ''}`);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="ml-auto border px-3 py-1 rounded-full !max-w-[320px] placeholder:text-black text-black border-black/20 outline-none mr-4"
-                                    />
-
+                                    <input type="text" placeholder="Find" value={search} onChange={(e) => { const val = e.target.value;
+                                            setSearch(val); router.push(`?page=1${val ? `&search=${val}` : ''}${activeRowId ? `&row=${activeRowId}` : ''}`);
+                                            setCurrentPage(1); }}
+                                        className="ml-auto border px-3 py-1 rounded-full !max-w-[320px] placeholder:text-black text-black border-black/20 outline-none mr-4" />
                                 </div>
-
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full border-collapse">
                                         <thead className="bg-[#4F02FE] text-white">
@@ -170,25 +153,14 @@ const MyDashboard = ({ universities }: { universities: any[] }) => {
                                         </thead>
                                         <tbody>
                                             {paginatedData.map((row) => (
-                                                <tr
-                                                    key={row.id}
-                                                    onClick={() => {
-                                                        setActiveRowId(row.id);
-                                                        router.push(`?page=${currentPage}&row=${row.id}`);
-                                                    }}
-
-                                                    className={`transition duration-300 ease-in-out cursor-pointer ${row.id === activeRowId ? 'bg-[#CD0CA7]/20' : 'bg-[#CD0CA714]/10'
-                                                        } hover:bg-[#CD0CA7]/10 active:bg-[#CD0CA7]/20`}
-                                                >
+                                                <tr key={row.id} onClick={() => { setActiveRowId(row.id); router.push(`?page=${currentPage}&row=${row.id}`);
+                                                    }} className={`transition duration-300 ease-in-out cursor-pointer ${row.id === activeRowId ? 'bg-[#CD0CA7]/20' : 'bg-[#CD0CA714]/10'
+                                                        } hover:bg-[#CD0CA7]/10 active:bg-[#CD0CA7]/20`} >
                                                     <td className="px-4 py-3">{row.id}</td>
                                                     <td className="px-4 py-3">{row.country}</td>
                                                     <td className="px-4 py-3">
-                                                        <span
-                                                            className={`text-xs px-2 py-1 rounded font-medium text-white ${row.offer === 'CD' ? 'bg-red-600' : 'bg-green-600'
-                                                                }`}
-                                                        >
-                                                            {row.offer}
-                                                        </span>
+                                                        <span className={`text-xs px-2 py-1 rounded font-medium text-white ${row.offer === 'CD' ? 'bg-red-600' : 'bg-green-600'
+                                                                }`} > {row.offer} </span>
                                                     </td>
                                                     <td className="px-4 py-3">{row.team}</td>
                                                     <td className="px-4 py-3">{row.appId}</td>
@@ -196,14 +168,8 @@ const MyDashboard = ({ universities }: { universities: any[] }) => {
                                                         Manage <Image src="/assets/images/svg/manage-arrow.svg" alt="arrow" width={16} height={16} />
                                                     </td>
                                                     <td className="px-4 py-3">
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                const updated = data.filter((item) => item.id !== row.id);
-                                                                setData(updated);
-                                                                setActiveRowId(null);
-                                                            }}
-                                                        >
+                                                        <button onClick={(e) => { e.stopPropagation(); const updated = data.filter((item) => item.id !== row.id);
+                                                                setData(updated); setActiveRowId(null); }} >
                                                             <Image src="/assets/images/svg/delete.svg" alt="delete" width={20} height={20} />
                                                         </button>
                                                     </td>
@@ -212,47 +178,25 @@ const MyDashboard = ({ universities }: { universities: any[] }) => {
                                         </tbody>
                                     </table>
                                 </div>
-
                             </main>
                             <div className="flex justify-end items-center mt-4 gap-2 text-sm">
-                                <button
-                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-                                    onClick={() => {
-                                        const newPage = Math.max(currentPage - 1, 1);
-                                        handlePageChange(newPage);
-                                    }}
-                                    disabled={currentPage === 1}
-                                >
-                                    Prev
+                                <button className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                                    onClick={() => { const newPage = Math.max(currentPage - 1, 1);
+                                        handlePageChange(newPage); }} disabled={currentPage === 1} > Prev
                                 </button>
-
                                 {Array.from({ length: totalPages }).map((_, i) => {
                                     const page = i + 1;
                                     return (
-                                        <button
-                                            key={i}
-                                            onClick={() => handlePageChange(page)}
-                                            className={`px-3 py-1 rounded ${currentPage === page ? 'bg-[#4F02FE] text-white' : 'bg-white'}`}
-                                        >
-                                            {page}
-                                        </button>
+                                        <button key={i} onClick={() => handlePageChange(page)}
+                                            className={`px-3 py-1 rounded ${currentPage === page ? 'bg-[#4F02FE] text-white' : 'bg-white'}`} >
+                                            {page} </button>
                                     );
                                 })}
-
-                                <button
-                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-                                    onClick={() => {
-                                        const newPage = Math.min(currentPage + 1, totalPages);
-                                        handlePageChange(newPage);
-                                    }}
-                                    disabled={currentPage === totalPages}
-                                >
-                                    Next
-                                </button>
+                                <button className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                                    onClick={() => { const newPage = Math.min(currentPage + 1, totalPages);
+                                        handlePageChange(newPage); }} disabled={currentPage === totalPages} > Next </button>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -260,4 +204,4 @@ const MyDashboard = ({ universities }: { universities: any[] }) => {
     );
 };
 
-export default MyDashboard;
+export default MyApiTable;
