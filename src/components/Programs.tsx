@@ -1,52 +1,100 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const Programs = () => {
-  const [result, setResult] = useState({
-    profitOrLoss: '',
-    triangle: '',
-  });
+  const [cp, setCp] = useState<number | ''>('');
+  const [sp, setSp] = useState<number | ''>('');
+  const [profitOrLoss, setProfitOrLoss] = useState('');
 
-  function calculateProfitOrLoss(costPrice: number, sellingPrice: number) {
-    if (sellingPrice > costPrice) {
-      let profit = sellingPrice - costPrice;
-      console.log(`Profit: ${profit}`);
-      return `Profit: ${profit}`;
-    } else if (costPrice > sellingPrice) {
-      let loss = costPrice - sellingPrice;
-      console.log(`Loss: ${loss}`);
-      return `Loss: ${loss}`;
+  const [angle1, setAngle1] = useState<number | ''>('');
+  const [angle2, setAngle2] = useState<number | ''>('');
+  const [angle3, setAngle3] = useState<number | ''>('');
+  const [triangleResult, setTriangleResult] = useState('');
+
+  function calculateProfitOrLoss(cp: number, sp: number) {
+    if (sp > cp) {
+      setProfitOrLoss(`Profit of ₹${sp - cp}`);
+    } else if (cp > sp) {
+      setProfitOrLoss(`Loss of ₹${cp - sp}`);
     } else {
-      console.log("No Profit No Loss");
-      return "No Profit No Loss";
+      setProfitOrLoss("No profit, no loss.");
     }
   }
 
   function isValidTriangle(angle1: number, angle2: number, angle3: number) {
     const sum = angle1 + angle2 + angle3;
-    if (sum === 180) {
-      console.log("Valid Triangle");
-      return "Valid Triangle";
+    if (angle1 > 0 && angle2 > 0 && angle3 > 0 && sum === 180) {
+      setTriangleResult("Valid triangle ");
     } else {
-      console.log("Invalid Triangle");
-      return "Invalid Triangle";
+      setTriangleResult("Not a valid triangle ");
     }
   }
 
-  useEffect(() => {
-    const profitOrLossResult = calculateProfitOrLoss(100, 150);
-    const triangleResult = isValidTriangle(60, 60, 60);
-    setResult({
-      profitOrLoss: profitOrLossResult,
-      triangle: triangleResult,
-    });
-  }, []);
-
   return (
-    <div className='text-center space-y-4 py-10'>
-      <h2 className='text-xl font-bold'>Programs</h2>
-      <p>{result.profitOrLoss}</p>
-      <p>{result.triangle}</p>
+    <div className="p-6 max-w-md mx-auto space-y-8">
+      <div className="space-y-2">
+        <h2 className="text-xl font-semibold">Profit or Loss Calculator</h2>
+        <input
+          type="number"
+          placeholder="Cost Price"
+          value={cp}
+          onChange={(e) => setCp(Number(e.target.value))}
+          className="border p-2 w-full rounded"
+        />
+        <input
+          type="number"
+          placeholder="Selling Price"
+          value={sp}
+          onChange={(e) => setSp(Number(e.target.value))}
+          className="border p-2 w-full rounded"
+        />
+        <button
+          onClick={() => {
+            if (typeof cp === 'number' && typeof sp === 'number') {
+              calculateProfitOrLoss(cp, sp);
+            } else {
+              setProfitOrLoss("Please enter valid numbers for Cost Price and Selling Price.");
+            }
+          }}
+          className="bg-blue-600 hover:bg-blue-400 text-white px-4 py-2 rounded"
+        >
+          Calculate
+        </button>
+        <div className="font-medium text-gray-800">{profitOrLoss}</div>
+      </div>
+
+
+      <div className="space-y-2">
+        <h2 className="text-xl font-semibold">Triangle Validity Checker</h2>
+        <input
+          type="number"
+          placeholder="Angle 1"
+          value={angle1}
+          onChange={(e) => setAngle1(Number(e.target.value))}
+          className="border p-2 w-full rounded"
+        />
+        <input
+          type="number"
+          placeholder="Angle 2"
+          value={angle2}
+          onChange={(e) => setAngle2(Number(e.target.value))}
+          className="border p-2 w-full rounded"
+        />
+        <input
+          type="number"
+          placeholder="Angle 3"
+          value={angle3}
+          onChange={(e) => setAngle3(Number(e.target.value))}
+          className="border p-2 w-full rounded"
+        />
+        <button
+          onClick={() => isValidTriangle(Number(angle1), Number(angle2), Number(angle3))}
+          className="bg-blue-600 hover:bg-blue-400 text-white px-4 py-2 rounded"
+        >
+          Check Triangle
+        </button>
+        <div className="font-medium text-gray-800">{triangleResult}</div>
+      </div>
     </div>
   );
 };
