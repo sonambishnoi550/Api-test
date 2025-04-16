@@ -223,10 +223,10 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                                         onClick={() => setActiveRowId(row.id)}
                                                         className={`transition duration-300 ease-in-out cursor-pointer ${row.id === activeRowId ? 'bg-[#CD0CA7]/20' : 'bg-[#CD0CA714]/10'} hover:bg-[#CD0CA7]/10 active:bg-[#CD0CA7]/20`}
                                                     >
-                                                        <td className="px-4 py-3">{row.id}</td>
-                                                        <td className="px-4 py-3">{row.country}</td>
-                                                        <td className="px-4 py-3">{row.name}</td>
-                                                        <td className="px-4 py-3">
+                                                        <td className="px-4 py-3 text-sm">{row.id}</td>
+                                                        <td className="px-4 py-3 text-sm">{row.country}</td>
+                                                        <td className="px-4 py-3 text-sm">{row.name}</td>
+                                                        <td className="px-4 py-3 text-sm">
                                                             {row.web_pages.length > 0 ? (
                                                                 <a href={row.web_pages[0]} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                                                                     Visit Website
@@ -253,9 +253,9 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                 </div>
                             </main>
 
-                            <div className="flex justify-end items-center mt-4 gap-2 text-sm">
+                            <div className="flex justify-end items-center mt-4 gap-2">
                                 <button
-                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                                    className="px-3 py-1 bg-gray-200 rounded text-[13px] disabled:opacity-50 cursor-pointer"
                                     onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
                                     disabled={currentPage === 1}
                                 >
@@ -264,7 +264,6 @@ const MyApiTable: React.FC<DashboardProps> = () => {
 
                                 {Array.from({ length: totalPages }).map((_, i) => {
                                     const page = i + 1;
-
                                     const isStart = page <= 3;
                                     const isEnd = page > totalPages - 1;
                                     const isCurrent = page === currentPage;
@@ -291,7 +290,7 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                 })}
 
                                 <button
-                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                                    className="px-3 py-1 text-[13px] bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                                     onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
                                     disabled={currentPage === totalPages}
                                 >
