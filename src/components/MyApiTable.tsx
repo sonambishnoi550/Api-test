@@ -103,7 +103,7 @@ const MyApiTable: React.FC<DashboardProps> = ({ universities }) => {
                 <div className="flex flex-wrap items-center sm:justify-between justify-start">
                     <div className="text-[32px] font-medium lg:pb-12 md:pb-10 pb-8">My DevOps Spaces</div>
                     <div className="flex justify-between items-center mb-6">
-                        <button className="button-gradient-bg text-white px-4 py-2 rounded-xs font-medium">
+                        <button className="button-gradient-bg text-white px-4 py-2 rounded-xs font-medium cursor-pointer">
                             Create a DevOps Space (1 left)
                         </button>
                     </div>
@@ -255,7 +255,7 @@ const MyApiTable: React.FC<DashboardProps> = ({ universities }) => {
 
                             <div className="flex justify-end items-center mt-4 gap-2 text-sm">
                                 <button
-                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                                     onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
                                     disabled={currentPage === 1}
                                 >
@@ -278,7 +278,7 @@ const MyApiTable: React.FC<DashboardProps> = ({ universities }) => {
                                             <button
                                                 key={page}
                                                 onClick={() => handlePageChange(page)}
-                                                className={`px-3 py-1 rounded ${isCurrent ? 'bg-[#4F02FE] text-white' : 'bg-white'}`}
+                                                className={`px-3 py-1 rounded-[8px] ${isCurrent ? 'bg-[#4F02FE] text-white' : 'bg-white'}`}
                                             >
                                                 {page}
                                             </button>
@@ -291,7 +291,7 @@ const MyApiTable: React.FC<DashboardProps> = ({ universities }) => {
                                 })}
 
                                 <button
-                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                                     onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
                                     disabled={currentPage === totalPages}
                                 >
