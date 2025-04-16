@@ -164,8 +164,8 @@ const MyApiTable: React.FC<DashboardProps> = () => {
 
                         <div className="flex flex-col w-full">
                             <main className="flex-1 py-6 bg-white shadow-sm ml-5 w-full">
-                                <div className="flex flex-wrap items-center gap-4 mb-4 pl-6">
-                                    <label className="flex items-center gap-2 text-sm font-medium">
+                                <div className="flex flex-wrap items-center gap-2 mb-4 pl-6">
+                                    <label className="flex items-center gap-1 text-sm font-medium">
                                         Show
                                         <select
                                             value={entries}
@@ -173,7 +173,7 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                                 setEntries(+e.target.value);
                                                 setCurrentPage(1);
                                             }}
-                                            className="border text-white font-medium text-base w-[59px] gap-1 rounded px-2 py-1 outline-none bg-[#CD0CA7]"
+                                            className="border text-white font-medium text-base w-[59px] gap-1 rounded-[6px] px-2 py-1 outline-none bg-[#A40A86]"
                                         >
                                             {DROPDOWN_OPTIONS.map((n) => (
                                                 <option key={n} value={n} className="font-medium text-base text-white">
