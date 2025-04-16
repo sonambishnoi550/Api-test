@@ -59,7 +59,7 @@ const Programs = () => {
         >
           Calculate
         </button>
-        <div className="font-medium text-gray-800">{profitOrLoss}</div>
+        <div className="font-bold text-black text-center">{profitOrLoss}</div>
       </div>
 
 
@@ -92,7 +92,7 @@ const Programs = () => {
         >
           Check Triangle
         </button>
-        <div className="font-medium text-gray-800">{triangleResult}</div>
+        <div className="font-bold text-black text-center">{triangleResult}</div>
       </div>
     </div>
   );
