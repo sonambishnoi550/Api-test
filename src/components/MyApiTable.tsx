@@ -204,7 +204,7 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                                 <th className="px-4 py-2 text-left">Country</th>
                                                 <th className="px-4 py-2 text-left">University Name</th>
                                                 <th className="px-4 py-2 text-left">Web Pages</th>
-                                                <th className="px-4 py-2 text-center">Action</th>
+                                                <th className="px-4 py-2 text-left">Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
