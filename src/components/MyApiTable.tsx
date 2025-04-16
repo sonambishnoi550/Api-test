@@ -52,6 +52,7 @@ const MyApiTable: React.FC<DashboardProps> = () => {
 
         fetchData();
     }, []);
+    console.log(data);
 
     useEffect(() => {
         const params = new URLSearchParams();
