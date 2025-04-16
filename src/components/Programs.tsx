@@ -29,7 +29,6 @@ const Programs = () => {
       setTriangleResult("Not a valid triangle ");
     }
   }
-
   return (
     <div className="p-6 py-12 max-w-md mx-auto space-y-8">
       <div className="space-y-2">
