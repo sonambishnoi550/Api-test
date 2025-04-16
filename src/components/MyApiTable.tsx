@@ -8,7 +8,7 @@ interface DashboardProps {
     universities: any;
 }
 
-const MyApiTable: React.FC<DashboardProps> = ({ universities }) => {
+const MyApiTable: React.FC<DashboardProps> = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const initialPage = parseInt(searchParams.get('page') || '1', 10);
