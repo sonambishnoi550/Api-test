@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 
 const Programs = () => {
-  const [cp, setCp] = useState<number | ''>('');
-  const [sp, setSp] = useState<number | ''>('');
+  const [CostPrice, setCostPrice] = useState<number | ''>('');
+  const [SellingPrice, setSellingPrice] = useState<number | ''>('');
   const [profitOrLoss, setProfitOrLoss] = useState('');
 
   const [angle1, setAngle1] = useState<number | ''>('');
@@ -11,11 +11,11 @@ const Programs = () => {
   const [angle3, setAngle3] = useState<number | ''>('');
   const [triangleResult, setTriangleResult] = useState('');
 
-  function calculateProfitOrLoss(cp: number, sp: number) {
-    if (sp > cp) {
-      setProfitOrLoss(`Profit of ₹${sp - cp}`);
-    } else if (cp > sp) {
-      setProfitOrLoss(`Loss of ₹${cp - sp}`);
+  function calculateProfitOrLoss(CostPrice: number, SellingPrice: number) {
+    if (SellingPrice > CostPrice) {
+      setProfitOrLoss(`Profit of ₹${SellingPrice - CostPrice}`);
+    } else if (CostPrice > SellingPrice) {
+      setProfitOrLoss(`Loss of ₹${CostPrice - SellingPrice}`);
     } else {
       setProfitOrLoss("No profit, no loss.");
     }
@@ -37,21 +37,21 @@ const Programs = () => {
         <input
           type="number"
           placeholder="Cost Price"
-          value={cp}
-          onChange={(e) => setCp(Number(e.target.value))}
+          value={CostPrice}
+          onChange={(e) => setCostPrice(Number(e.target.value))}
           className="border p-2 w-full rounded"
         />
         <input
           type="number"
           placeholder="Selling Price"
-          value={sp}
-          onChange={(e) => setSp(Number(e.target.value))}
+          value={SellingPrice}
+          onChange={(e) => setSellingPrice(Number(e.target.value))}
           className="border p-2 w-full rounded"
         />
         <button
           onClick={() => {
-            if (typeof cp === 'number' && typeof sp === 'number') {
-              calculateProfitOrLoss(cp, sp);
+            if (typeof CostPrice === 'number' && typeof SellingPrice === 'number') {
+              calculateProfitOrLoss(CostPrice, SellingPrice);
             } else {
               setProfitOrLoss("Please enter valid numbers for Cost Price and Selling Price.");
             }
