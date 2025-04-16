@@ -100,7 +100,7 @@ const MyApiTable: React.FC<DashboardProps> = ({ universities }) => {
     return (
         <div className="min-h-screen bg-[#F5F6FA] flex justify-center items-center py-14">
             <div className="container mx-auto px-4">
-                <div className="flex flex-wrap items-center sm:justify-between justify-center">
+                <div className="flex flex-wrap items-center sm:justify-between justify-start">
                     <div className="text-[32px] font-medium lg:pb-12 md:pb-10 pb-8">My DevOps Spaces</div>
                     <div className="flex justify-between items-center mb-6">
                         <button className="button-gradient-bg text-white px-4 py-2 rounded-xs font-medium">
@@ -192,7 +192,7 @@ const MyApiTable: React.FC<DashboardProps> = ({ universities }) => {
                                             setSearch(e.target.value);
                                             setCurrentPage(1);
                                         }}
-                                        className="ml-auto border px-3 py-1 rounded-full placeholder:text-black text-black border-black/20 outline-none mr-4"
+                                        className="ml-auto border px-3 w-[320px] py-1 rounded-full placeholder:text-black text-black border-black/20 outline-none mr-4"
                                     />
                                 </div>
 
