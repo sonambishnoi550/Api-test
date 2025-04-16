@@ -108,10 +108,9 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                         </button>
                     </div>
                 </div>
-
                 <div className="max-xl:overflow-auto">
                     <div className="flex w-full">
-                        <aside className="sm:p-6 space-y-8 shadow-sm">
+                        <div className="sm:p-6 space-y-8 shadow-sm">
                             <div>
                                 <h2 className="font-medium text-xl mb-5">User’s Guides</h2>
                                 {USER_DATA.map((item: string) => (
@@ -126,7 +125,6 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                     </div>
                                 ))}
                             </div>
-
                             <div>
                                 <h2 className="font-medium text-xl mb-3">Contact and Support</h2>
                                 <div className="text-sm space-y-2">
@@ -138,7 +136,7 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                             <span className="text-sm py-2 pl-3 flex gap-2">
                                                 <Image
                                                     src="/assets/images/svg/faq.svg"
-                                                    alt="icon"
+                                                    alt="faq"
                                                     height={16}
                                                     width={16}
                                                 />
@@ -160,10 +158,10 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                     </div>
                                 </div>
                             </div>
-                        </aside>
+                        </div>
 
                         <div className="flex flex-col w-full">
-                            <main className="flex-1 py-6 bg-white shadow-sm ml-5 w-full">
+                            <div className="flex-1 py-6 bg-white shadow-sm ml-5 w-full">
                                 <div className="flex flex-wrap items-center gap-2 mb-4 pl-6">
                                     <label className="flex items-center gap-1 text-sm font-medium">
                                         Show
@@ -183,7 +181,6 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                         </select>
                                         Enter per page
                                     </label>
-
                                     <input
                                         type="text"
                                         placeholder="Find"
@@ -195,7 +192,6 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                         className="ml-auto border px-3 w-[320px] py-1 rounded-full placeholder:text-black text-black border-black/20 outline-none mr-4"
                                     />
                                 </div>
-
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full border-collapse">
                                         <thead className="bg-[#4F02FE] text-white">
@@ -251,8 +247,7 @@ const MyApiTable: React.FC<DashboardProps> = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                            </main>
-
+                            </div>
                             <div className="flex justify-end items-center mt-4 gap-2">
                                 <button
                                     className="px-3 py-1 bg-gray-200 rounded text-[13px] disabled:opacity-50 cursor-pointer"
